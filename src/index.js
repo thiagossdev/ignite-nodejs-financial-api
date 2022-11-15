@@ -7,7 +7,14 @@ const accounts = [
     id: uuidv4(),
     cpf: '00692525300',
     name: 'Thiago Fake',
-    statements: [],
+    statements: [
+      {
+        type: 'credit',
+        description: 'Salário',
+        amount: 1527.3,
+        createdAt: new Date('2022-11-01T08:00:00.000Z'),
+      },
+    ],
   },
 ];
 
@@ -62,6 +69,16 @@ app.post('/accounts', (request, response) => {
 app.get('/statements', verifyIfExistsAccountCPF, (request, response) => {
   const { account } = request;
   return response.send(account.statements);
+});
+
+app.get('/statements/date', verifyIfExistsAccountCPF, (request, response) => {
+  const { account } = request;
+  const { date } = request.query;
+
+  const datetime = new Date(date + ' 00:00').toDateString();
+  const statements = account.statements.filter((operation) => operation.createdAt.toDateString() === datetime);
+
+  return response.send(statements);
 });
 
 app.post('/deposit', verifyIfExistsAccountCPF, (request, response) => {
