@@ -85,6 +85,14 @@ app.get('/accounts', verifyIfExistsAccountCPF, (request, response) => {
   });
 });
 
+app.delete('/accounts', verifyIfExistsAccountCPF, (request, response) => {
+  const { account } = request;
+
+  accounts.splice(account, 1);
+
+  return response.status(204).send();
+});
+
 app.get('/statements', verifyIfExistsAccountCPF, (request, response) => {
   const { account } = request;
   return response.send(account.statements);
